@@ -54,14 +54,8 @@ To add multiple ScopedModels, use ScopedContainer.
 ```dart
 ScopedContainer(
   container: [
-    (_, child) => ScopedModel<CounterModel>(
-          model: counterModel,
-          child: child,
-        ),
-    (_, child) => ScopedModel<SettingsModel>(
-          model: settingsModel,
-          child: child,
-        ),
+    ScopedWrapper(model: counterModel),
+    ScopedWrapper(model: settingsModel),
   ],
   child: MyApp(),
 );
@@ -69,7 +63,7 @@ ScopedContainer(
 
 To obtain Listenable directly, use extension methods. 
 
-```dart
+```dart/
 context.find<CounterModel>();
 
 context.dependOn<CounterModel>();

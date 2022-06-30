@@ -20,8 +20,8 @@ void main() {
     await tester.pumpWidget(
       ScopedContainer(
         container: [
-          (_, child) => ScopedModel(model: counterModel, child: child),
-          (_, child) => ScopedModel(model: settingsModel, child: child),
+          ScopedWrapper(model: counterModel),
+          ScopedWrapper(model: settingsModel),
         ],
         child: const Placeholder(),
       ),

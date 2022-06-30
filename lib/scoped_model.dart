@@ -35,22 +35,35 @@ class ScopedBuilder<T extends Listenable> extends StatelessWidget {
 /// Provides all the [ScopedModel]s to decendant widgets.
 class ScopedContainer extends StatelessWidget {
   const ScopedContainer({super.key, required this.container, required this.child});
-  final List<ScopedModelBuilder> container;
+  final List<BaseScopedWrapper> container;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     Widget currentChild = child;
-    for (final scopedModelBuilder in container) {
-      currentChild = scopedModelBuilder(context, currentChild);
+    for (final scopedWrapper in container) {
+      currentChild = scopedWrapper.wrap(currentChild);
       assert(currentChild is ScopedModel);
     }
     return currentChild;
   }
 }
 
-/// Function that returns a [ScopedModel] widget.
-typedef ScopedModelBuilder = Widget Function(BuildContext context, Widget child);
+/// Base class for [ScopedWrapper]
+abstract class BaseScopedWrapper {
+  const BaseScopedWrapper();
+  Widget wrap(Widget child);
+}
+
+/// Wraps child with a [ScopedModel] widget.
+class ScopedWrapper<T extends Listenable> extends BaseScopedWrapper {
+  const ScopedWrapper({this.key, required this.model});
+  final Key? key;
+  final T model;
+
+  @override
+  Widget wrap(Widget child) => ScopedModel<T>(key: key, model: model, child: child);
+}
 
 /// Methods for calling [ScopedModel.of] on [BuildContext].
 extension ScopedContext on BuildContext {
